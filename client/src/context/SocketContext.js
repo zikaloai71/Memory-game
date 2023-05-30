@@ -6,10 +6,18 @@ export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-
+  
+  function getHostName(){
+    if(window.location.hostname === "localhost"){
+      return "http://localhost:3001"
+    }
+    else{
+      return "https://memory-game-j819.onrender.com"
+    }
+  }
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3001');
+    const newSocket = io(getHostName());
     setSocket(newSocket);
 
     return () => newSocket.close();
