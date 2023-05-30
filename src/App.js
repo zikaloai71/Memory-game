@@ -28,17 +28,21 @@ function App() {
   const [choiceTwo, setChoiceTwo] = useState(null);
 
   const [disabled, setDisabled] = useState(false);
-  const [showCards, setShowCards] = useState(true);
+  // const [showCards, setShowCards] = useState(true);
   const [gameState, setGameState] = useState("");
   const [userName, setUserName] = useState("");
   const [owner, setOwner] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [gameData, setGameData] = useState({});
   const [roomUsers, setRoomUsers] = useState([]);
+  const [winner,setWinner]=useState(null);
 
-
-  
- 
+  useEffect(() => {
+    socket?.on("endGame", (gameData) => {
+    setWinner(gameData);
+    });
+    
+  }, [socket,userName]);
 
   useEffect(() => {
     
@@ -86,7 +90,7 @@ function App() {
   };
 
   useEffect(() => {
-    setTimeout(() => setShowCards(false), 2000);
+    // setTimeout(() => setShowCards(false), 10000);
     shuffleCards();
   }, []);
 
@@ -100,7 +104,16 @@ function App() {
       return false;
     }
   };
- 
+
+   const announceWinner = () => {
+      if(userName === winner?.winner?.userName){
+        return  <h1 className="winner">you won the game in {winner?.winner?.turns} turns</h1>
+      }
+      else{
+        return <h1 className="winner">{winner?.winner?.userName} won the game in {winner?.winner?.turns} turns</h1>
+      }
+    
+   }
   return (
     <div className="app">
       {gameState === "" ? (
@@ -129,7 +142,11 @@ function App() {
           <p>finish with least number of turns and as fast as possible</p>
           {/* <button className='startBtn' onClick={()=>{shuffleCards();setShowCards(true);setTimeout(()=>setShowCards(false),2000)}}>start new game</button> */}
           <div className="cards">
-            {playerDone() && <PlayerDone />}
+           
+            {(playerDone() && !winner) && <PlayerDone />}
+            {
+              winner && announceWinner()
+            }
             {cards.map((card) => (
               <SingleCard
                 key={card.id}
@@ -138,8 +155,7 @@ function App() {
                 flipped={
                   card === choiceOne ||
                   card === choiceTwo ||
-                  card.matched ||
-                  showCards
+                  card.matched 
                 }
                 disabled={disabled}
               />

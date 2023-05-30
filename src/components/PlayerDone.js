@@ -10,8 +10,8 @@ export default function PlayerDone() {
         })
     }, [socket])
   return (
-    <div>
+   
       <h3 className="winner">wait for other players you finished in {turns}</h3>
-    </div>
+  
   )
 }
