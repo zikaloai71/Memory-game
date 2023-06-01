@@ -1,21 +1,15 @@
 const express = require('express')
-// const {Server} = require('socket.io')
+const {Server} = require('socket.io')
 const app = express()
 const cors = require('cors')
 const http = require('http').createServer(app)
-// const io = new Server(http, {cors: {origin: ['http://localhost:3000','https://memorygame-6w0y.onrender.com']}})
+const io = new Server(http, {cors: {origin:'*', methods: ["GET", "POST"]}})
 const port = process.env.PORT || 3001
 const bodyParser = require('body-parser')
 let rooms = []
 let runningRooms = []
 let playersEndedGame = {}
 let endgame = {}
-const io = require("socket.io")(http, {
-    cors: {
-      origin: ["http://localhost:3000", "https://memorygame-6w0y.onrender.com"],
-      methods: ["GET", "POST"]
-    }
-  });
 
 http.listen(port, () => {console.log(`Listening at URL http://localhost:${port}`)})
 
@@ -23,16 +17,6 @@ app.use(express.static('public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(cors())
-
-// function getHostName(){
-//     if(window.location.hostname === "localhost"){
-//         return "http://localhost:3000"
-//     }
-//     else{
-//         return "https://memorygame-6w0y.onrender.com"
-//     }
-// }
-
 const endGameEmit = async(roomId, playersEndedGame)=>{
     let winner = playersEndedGame[0]
     for(let i = 1; i < playersEndedGame.length; i++){
