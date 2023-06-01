@@ -12,7 +12,7 @@ export const SocketProvider = ({ children }) => {
       return "http://localhost:3001"
     }
     else{
-      return "https://memory-game-j819.onrender.com"
+      return "https://memorygame-backend.onrender.com"
     }
   }
 
