@@ -10,7 +10,7 @@ let rooms = []
 let runningRooms = []
 let playersEndedGame = {}
 let endgame = {}
-const io = require("socket.io")(httpServer, {
+const io = require("socket.io")(http, {
     cors: {
       origin: ["http://localhost:3000", "https://memorygame-6w0y.onrender.com"],
       methods: ["GET", "POST"]
@@ -23,6 +23,7 @@ app.use(express.static('public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(cors())
+
 // function getHostName(){
 //     if(window.location.hostname === "localhost"){
 //         return "http://localhost:3000"
@@ -31,6 +32,7 @@ app.use(cors())
 //         return "https://memorygame-6w0y.onrender.com"
 //     }
 // }
+
 const endGameEmit = async(roomId, playersEndedGame)=>{
     let winner = playersEndedGame[0]
     for(let i = 1; i < playersEndedGame.length; i++){
